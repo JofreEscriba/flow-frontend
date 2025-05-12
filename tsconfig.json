@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "./dist" // Carpeta donde se generarán los archivos compilados
+    },
+    "include": ["src/**/*"], // Incluye los archivos de la carpeta src
+    "exclude": ["node_modules", "dist"] // Excluye node_modules y la carpeta de salida
+}
