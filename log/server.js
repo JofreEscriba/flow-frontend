@@ -6,6 +6,7 @@ const helmet = require("helmet");
 
 const app = express();
 const port = process.env.PORT || 3000;
+const url = process.env.BASE_URL || "http://127.0.0.1:8000/api/";
 
 // Middleware
 app.use(cors());
@@ -16,7 +17,7 @@ app.use(express.json());
 app.get("/api/example", async (req, res) => {
     try {
         // URL inventada para consumir datos
-        const response = await axios.get("https://api.ejemplo.com/data");
+        const response = await axios.get(`${url}`);
         res.status(200).json({
             success: true,
             data: response.data,
