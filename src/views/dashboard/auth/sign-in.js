@@ -55,7 +55,7 @@ const SignIn = () => {
                                     </Col>
                                  </Row>
                                  <div className="d-flex justify-content-center">
-                                    <Button onClick={() => history.push('/dashboard')} type="button" variant="btn btn-primary">Sign In</Button>
+                                    <Button onClick={() => SignIn()} type="button" variant="btn btn-primary">Sign In</Button>
                                  </div>
                                  <p className="text-center my-3">or sign in with other accounts?</p>
                                  <div className="d-flex justify-content-center">
