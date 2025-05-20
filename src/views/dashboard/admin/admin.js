@@ -351,12 +351,6 @@ const Admin = () => {
                                                             }
                                                         </td>
                                                     ))}
-                                                    {/* <td className="text-center">
-                                                            <input className="form-check-input" type="checkbox"/>
-                                                        </td>
-                                                        <td className="text-center">
-                                                            <input className="form-check-input" type="checkbox"/>
-                                                        </td> */}
                                                 </tr>
                                             ))
                                         }

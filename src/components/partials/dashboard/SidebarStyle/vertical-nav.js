@@ -55,82 +55,13 @@ const VerticalNav = memo((props) => {
                                 <path d="M21.9998 17.3992C21.9998 19.2648 20.4609 20.7777 18.5609 20.7777C16.6621 20.7777 15.1221 19.2648 15.1221 17.3992C15.1221 15.5325 16.6621 14.0195 18.5609 14.0195C20.4609 14.0195 21.9998 15.5325 21.9998 17.3992Z" fill="currentColor"></path>
                             </svg>
                         </i>
-                        <span className="item-name">Menu Style</span>
+                        <span className="item-name">Servicios</span>
                         <i className="right-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </i>
                     </CustomToggle>
-                    <Accordion.Collapse eventKey="horizontal-menu" >
-                        <ul  className="sub-nav">
-                            <li className="nav-item">
-                                <Link className={`${location.pathname === '/horizontal' ? 'active' : ''} nav-link`} to="/horizontal">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> H </i>
-                                    <span className="item-name"> Horizontal </span>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link " to="/dual-horizontal">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> D </i>
-                                    <span className="item-name">Dual Horizontal</span>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className={`${location.pathname === '/dual-compact' ? 'active' : ''} nav-link`}  to="/dual-compact">
-                                    <i className="icon svg-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> D </i>                   
-                                    <span className="item-name">Dual Compact</span>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className={`${location.pathname === '/boxed' ? 'active' : ''} nav-link`} to="/boxed">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> B </i>
-                                    <span className="item-name">Boxed Horizontal</span>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className={`${location.pathname === '/boxedfancy' ? 'active' : ''} nav-link`} to="/boxedFancy">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> B </i>
-                                    <span className="item-name">Boxed Fancy</span>
-                                </Link>
-                            </li>
-                        </ul>
-                    </Accordion.Collapse>
                 </Accordion.Item>
                 <li className="nav-item">
                     <Link className={`${location.pathname === '/' ? 'active' : ''} nav-link `} aria-current="page" target="blank" to="/">

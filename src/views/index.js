@@ -145,10 +145,6 @@ const Index = () => {
               <h1 className="my-4">
                 <span data-setting="app_name">{appName}</span>- Design System
               </h1>
-              <h4 className="text-white mb-5">
-                Production ready FREE Open Source <b>Dashboard UI Kit</b> and{" "}
-                <b>Design System</b>.
-              </h4>
               <div className="d-flex justify-content-center align-items-center">
                 <div>
                   <Link
