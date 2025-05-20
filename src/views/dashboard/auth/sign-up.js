@@ -14,6 +14,7 @@ const SignUp = () => {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [confirmPassword, setConfirmPassword] = useState('');
+   const [userName, setUserName] = useState('');
    const navigate = useNavigate();
 
    const handleSignUp = async () => {
@@ -28,7 +29,7 @@ const SignUp = () => {
             headers: {
                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: email, password }),
+            body: JSON.stringify({name: userName, email: email, password }),
          });
 
          if (response.ok) {
@@ -108,6 +109,19 @@ const SignUp = () => {
                                              placeholder=" "
                                              value={confirmPassword}
                                              onChange={(e) => setConfirmPassword(e.target.value)}
+                                          />
+                                       </Form.Group>
+                                    </Col>
+                                    <Col lg="6">
+                                       <Form.Group className="form-group">
+                                          <Form.Label htmlFor="userName" className="">User name</Form.Label>
+                                          <Form.Control
+                                             type="text"
+                                             className=""
+                                             id="userName"
+                                             placeholder=" "
+                                             value={userName}
+                                             onChange={(e) => setUserName(e.target.value)}
                                           />
                                        </Form.Group>
                                     </Col>
