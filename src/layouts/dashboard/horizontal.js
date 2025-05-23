@@ -9,7 +9,6 @@ import Footer from '../../components/partials/dashboard/FooterStyle/footer'
 
 //default 
 import HorizontalRouter from '../../router/horizontal-router'
-import SettingOffCanvas from '../../components/setting/SettingOffCanvas'
 
 
 
@@ -37,7 +36,6 @@ const Horizontal = memo((props) => {
                 </div>
                 <Footer />
             </main>
-            <SettingOffCanvas/>
         </Fragment>
     )
 })

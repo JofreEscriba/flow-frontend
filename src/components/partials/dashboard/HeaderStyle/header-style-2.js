@@ -40,7 +40,6 @@ const HeaderStyle2 = memo(() => {
                    <MobildeOffcanvas/>
                     <Link to="/dashboard" className="logo-center navbar-brand col-md-3 col-lg-3">
                         <Logo color={true} />
-                        <h4 className="logo-title">Hope UI</h4>
                     </Link>
                     <HorizontalNav />
                     <Navbar.Toggle aria-controls="navbarSupportedContent">

@@ -46,8 +46,8 @@ const VerticalNav = memo((props) => {
                     </Link>
                 </li>
                 <Accordion.Item as="li" eventKey="horizontal-menu" bsPrefix={`nav-item ${active === 'menustyle' ? 'active' : ''} `} onClick={() => setActive('menustyle')}  >
-                    <CustomToggle eventKey="horizontal-menu" onClick={(activeKey) => setActiveMenu(activeKey)}>
-                    <i className="icon">
+                    <Link className={`${location.pathname === '/dashboard/special-pages/kanban' ? 'active' : '' } nav-link`} to="/dashboard/special-pages/kanban">
+                        <i className="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.4" d="M10.0833 15.958H3.50777C2.67555 15.958 2 16.6217 2 17.4393C2 18.2559 2.67555 18.9207 3.50777 18.9207H10.0833C10.9155 18.9207 11.5911 18.2559 11.5911 17.4393C11.5911 16.6217 10.9155 15.958 10.0833 15.958Z" fill="currentColor"></path>
                                 <path opacity="0.4" d="M22.0001 6.37867C22.0001 5.56214 21.3246 4.89844 20.4934 4.89844H13.9179C13.0857 4.89844 12.4102 5.56214 12.4102 6.37867C12.4102 7.1963 13.0857 7.86 13.9179 7.86H20.4934C21.3246 7.86 22.0001 7.1963 22.0001 6.37867Z" fill="currentColor"></path>
@@ -56,29 +56,12 @@ const VerticalNav = memo((props) => {
                             </svg>
                         </i>
                         <span className="item-name">Servicios</span>
-                        <i className="right-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </i>
-                    </CustomToggle>
-                </Accordion.Item>
-                <li className="nav-item">
-                    <Link className={`${location.pathname === '/' ? 'active' : ''} nav-link `} aria-current="page" target="blank" to="/">
-                        <i className="icon">
-                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M21.9964 8.37513H17.7618C15.7911 8.37859 14.1947 9.93514 14.1911 11.8566C14.1884 13.7823 15.7867 15.3458 17.7618 15.3484H22V15.6543C22 19.0136 19.9636 21 16.5173 21H7.48356C4.03644 21 2 19.0136 2 15.6543V8.33786C2 4.97862 4.03644 3 7.48356 3H16.5138C19.96 3 21.9964 4.97862 21.9964 8.33786V8.37513ZM6.73956 8.36733H12.3796H12.3831H12.3902C12.8124 8.36559 13.1538 8.03019 13.152 7.61765C13.1502 7.20598 12.8053 6.87318 12.3831 6.87491H6.73956C6.32 6.87664 5.97956 7.20858 5.97778 7.61852C5.976 8.03019 6.31733 8.36559 6.73956 8.36733Z" fill="currentColor"></path>
-                            <path opacity="0.4" d="M16.0374 12.2966C16.2465 13.2478 17.0805 13.917 18.0326 13.8996H21.2825C21.6787 13.8996 22 13.5715 22 13.166V10.6344C21.9991 10.2297 21.6787 9.90077 21.2825 9.8999H17.9561C16.8731 9.90338 15.9983 10.8024 16 11.9102C16 12.0398 16.0128 12.1695 16.0374 12.2966Z" fill="currentColor"></path>
-                            <circle cx="18" cy="11.8999" r="1" fill="currentColor"></circle>
-                        </svg>
-                        </i>
-                        <span className="item-name">Design System<span className="badge rounded-pill bg-success ms-3">UI</span></span>
                     </Link>
-                </li>
+                </Accordion.Item>
                 <li><hr className="hr-horizontal"/></li>
                 <li className="nav-item static-item">
                     <Link className="nav-link static-item disabled" to="#" tabIndex="-1">
-                        <span className="default-icon">Pages</span>
+                        <span className="default-icon">Preferences</span>
                         <span className="mini-icon">-</span>
                     </Link>
                 </li>
