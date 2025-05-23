@@ -13,7 +13,6 @@ import HorizontalMultiRouter from '../../router/horizontal-multi-router'
 import Footer from '../../components/partials/dashboard/FooterStyle/footer'
 import { memo } from 'react';
 import { Fragment } from 'react';
-import SettingOffCanvas from '../../components/setting/SettingOffCanvas'
 
 
 const DualHorizontal = memo((props) => {
@@ -40,7 +39,6 @@ const DualHorizontal = memo((props) => {
                 </div>
                 <Footer />
             </main>   
-            <SettingOffCanvas/>
         </Fragment>
     )
 })

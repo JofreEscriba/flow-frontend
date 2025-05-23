@@ -12,9 +12,6 @@ import HeaderStyle2 from "../../components/partials/dashboard/HeaderStyle/header
 import Footer from "../../components/partials/dashboard/FooterStyle/footer";
 import Loader from "../../components/Loader";
 
-// store
-import SettingOffCanvas from "../../components/setting/SettingOffCanvas";
-
 const BoxedFancy = memo((props) => {
   useEffect(() => {
     document.body.classList.add("boxed-fancy");
@@ -68,7 +65,6 @@ const BoxedFancy = memo((props) => {
         <Footer />
       </main>
     </div>
-    <SettingOffCanvas/>
     </Fragment>
   );
 });

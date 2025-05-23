@@ -11,10 +11,6 @@ import  HeaderStyle2 from  '../../components/partials/dashboard/HeaderStyle/head
 //footer
 import Footer from '../../components/partials/dashboard/FooterStyle/footer'
 
-// store
-
-import SettingOffCanvas from '../../components/setting/SettingOffCanvas'
-
 
 
 const Boxed = memo((props) => {
@@ -51,7 +47,6 @@ const Boxed = memo((props) => {
                 <Footer />
             </main>
         </div>
-        <SettingOffCanvas/>
         </Fragment>
     )
 })
