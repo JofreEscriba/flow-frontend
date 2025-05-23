@@ -15,20 +15,22 @@ app.use(express.json());
 
 
 app.post("/signin", async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        // Simulación de autenticación
-        if (username === "admin" && password === "password") {
+        // Realizar la solicitud al backend externo
+        const response = await axios.post(`${baseUrl}login`, { email, password });
+
+        if (response.status === 200) {
             res.status(200).json({
                 success: true,
                 message: "Inicio de sesión exitoso",
-                user: { username },
+                user: response.data.user,
             });
         } else {
-            res.status(401).json({
+            res.status(response.status).json({
                 success: false,
-                message: "Credenciales inválidas",
+                message: response.data.message || "Error en el inicio de sesión",
             });
         }
     } catch (error) {
@@ -40,22 +42,23 @@ app.post("/signin", async (req, res) => {
     }
 });
 
-// Endpoint para Sign Up
 app.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
+    const { name,email, password } = req.body;
 
     try {
-        // Simulación de registro
-        if (username && password) {
+        // Realizar la solicitud al backend externo
+        const response = await axios.post(`${baseUrl}register`, {name,email, password });
+
+        if (response.status === 201) {
             res.status(201).json({
                 success: true,
                 message: "Registro exitoso",
-                user: { username },
+                user: response.data.user,
             });
         } else {
-            res.status(400).json({
+            res.status(response.status).json({
                 success: false,
-                message: "Faltan datos requeridos",
+                message: response.data.message || "Error en el registro",
             });
         }
     } catch (error) {
