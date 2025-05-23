@@ -36,7 +36,7 @@ const HeaderStyle3 = () => {
                        <MobildeOffcanvas/>
                         <Link to="/dashboard" className="logo-center navbar-brand ">
                             <Logo color={true} />
-                            <h4 className="logo-title">Hope UI</h4>
+
                         </Link>
     {/*<div className="">*/}
                             <div className="input-group search-input">
