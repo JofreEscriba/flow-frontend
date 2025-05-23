@@ -12,6 +12,35 @@ import auth1 from '../../../assets/images/auth/01.png'
 
 const SignIn = () => {
    let history = useNavigate()
+   const [email, setEmail] = React.useState('');
+   const [password, setPassword] = React.useState('');
+   const navigate = useNavigate();
+
+   const handleSignIn = async () => {
+      try {
+         const response = await fetch('http://localhost:5000/signin', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({email: email, password }),
+         });
+
+         if (response.ok) {
+            const data = await response.json();
+            console.log('Inicio de sesión exitoso:', data);
+            alert('Inicio de sesión exitoso.');
+            navigate('/dashboard');
+         } else {
+            const errorData = await response.json();
+            console.error('Error en Sign In:', errorData.message);
+            alert(errorData.message); // Muestra un mensaje de error
+         }
+      } catch (error) {
+         console.error('Error al conectar con el backend:', error);
+         alert('Error al conectar con el servidor.');
+      }
+   };
    return (
       <>
          <section className="login-content">
@@ -28,13 +57,13 @@ const SignIn = () => {
                                     <Col lg="12">
                                        <Form.Group className="form-group">
                                           <Form.Label htmlFor="email" className="">Email</Form.Label>
-                                          <Form.Control type="email" className="" id="email" aria-describedby="email" placeholder=" " />
+                                          <Form.Control type="email" className="" id="email" aria-describedby="email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)}/>
                                        </Form.Group >
                                     </Col>
                                     <Col lg="12" className="">
                                        <Form.Group className="form-group">
                                           <Form.Label htmlFor="password" className="">Password</Form.Label>
-                                          <Form.Control type="password" className="" id="password" aria-describedby="password" placeholder=" " />
+                                          <Form.Control type="password" className="" id="password" aria-describedby="password" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)}/>
                                        </Form.Group>
                                     </Col>
                                     <Col lg="12" className="d-flex justify-content-between">
@@ -46,7 +75,7 @@ const SignIn = () => {
                                     </Col>
                                  </Row>
                                  <div className="d-flex justify-content-center">
-                                    <Button onClick={() => history.push('/dashboard')} type="button" variant="btn btn-primary">Sign In</Button>
+                                    <Button onClick={handleSignIn} type="button" variant="btn btn-primary">Sign In</Button>
                                  </div>
                                  <p className="text-center my-3">or sign in with other accounts?</p>
                                  <div className="d-flex justify-content-center">

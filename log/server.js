@@ -5,8 +5,8 @@ const axios = require("axios");
 const helmet = require("helmet");
 
 const app = express();
-const port = process.env.PORT || 3000;
-const baseUrl = process.env.BASE_URL || "http://127.0.0.1:8000/api/";
+const port = process.env.PORT || 5000;
+const baseUrl = process.env.BASE_URL || "http://flow-backend.test/api/";
 
 // Middleware
 app.use(cors());

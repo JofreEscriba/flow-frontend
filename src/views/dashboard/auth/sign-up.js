@@ -12,6 +12,42 @@ import auth5 from '../../../assets/images/auth/05.png'
 
 const SignUp = () => {
    let history = useNavigate()
+   const [email, setEmail] = React.useState('');
+   const [password, setPassword] = React.useState('');
+   const [confirmPassword, setConfirmPassword] = React.useState('');
+   const [userName, setUserName] = React.useState('');
+   const navigate = useNavigate();
+
+   const handleSignUp = async () => {
+      if (password !== confirmPassword) {
+         alert('Las contraseñas no coinciden.');
+         return;
+      }
+
+      try {
+         const response = await fetch('http://localhost:5000/signup', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({name: userName, email: email, password }),
+         });
+
+         if (response.ok) {
+            const data = await response.json();
+            console.log('Registro exitoso:', data);
+            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            navigate('/auth/sign-in'); // Redirige a la página de inicio de sesión
+         } else {
+            const errorData = await response.json();
+            console.error('Error en Sign Up:', errorData.message);
+            alert(errorData.message); // Muestra un mensaje de error
+         }
+      } catch (error) {
+         console.error('Error al conectar con el backend:', error);
+         alert('Error al conectar con el servidor.');
+      }
+   };
    return (
       <>
          <section className="login-content">
@@ -31,7 +67,7 @@ const SignUp = () => {
                                     <Col lg="6">
                                        <Form.Group className="form-group">
                                           <Form.Label htmlFor="full-name" className="">Full Name</Form.Label>
-                                          <Form.Control type="text" className="" id="full-name" placeholder=" " />
+                                          <Form.Control type="text" className="" id="full-name" placeholder=" " value={userName} onChange={(e) => setUserName(e.target.value)}/>
                                        </Form.Group>
                                     </Col>
                                     <Col lg="6">
@@ -43,7 +79,7 @@ const SignUp = () => {
                                     <Col lg="6">
                                        <Form.Group className="form-group">
                                           <Form.Label htmlFor="email" className="">Email</Form.Label>
-                                          <Form.Control type="email" className="" id="email" placeholder=" " />
+                                          <Form.Control type="email" className="" id="email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)}/>
                                        </Form.Group>
                                     </Col>
                                     <Col lg="6">
@@ -55,13 +91,13 @@ const SignUp = () => {
                                     <Col lg="6">
                                        <Form.Group className="form-group">
                                           <Form.Label htmlFor="password" className="">Password</Form.Label>
-                                          <Form.Control type="password" className="" id="password" placeholder=" " />
+                                          <Form.Control type="password" className="" id="password" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)}/>
                                        </Form.Group>
                                     </Col>
                                     <Col lg="6">
                                        <Form.Group className="form-group">
-                                          <Form.Label htmlFor="confirm-password" className="">Confirm Password</Form.Label>
-                                          <Form.Control type="text" className="" id="confirm-password" placeholder=" " />
+                                          <Form.Label htmlFor="confirm-password" className="" >Confirm Password</Form.Label>
+                                          <Form.Control type="text" className="" id="confirm-password" placeholder=" " value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                                        </Form.Group>
                                     </Col>
                                     <Col lg="12" className="d-flex justify-content-center">
@@ -72,7 +108,7 @@ const SignUp = () => {
                                     </Col>
                                  </Row>
                                  <div className="d-flex justify-content-center">
-                                    <Button onClick={() => history.push('/dashboard')} type="button" variant="primary">Sign Up</Button>
+                                    <Button onClick={handleSignUp} type="button" variant="primary">Sign Up</Button>
                                  </div>
                                  <p className="text-center my-3">or sign in with other accounts?</p>
                                  <div className="d-flex justify-content-center">
