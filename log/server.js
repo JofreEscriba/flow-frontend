@@ -223,6 +223,25 @@ app.delete("/services/:id", async (req, res) => {
     }
 });
 
+app.get("/users", async (req, res) => {
+  try {
+    console.log(baseUrl);
+    const response = await axios.get(`${baseUrl}users`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
+    console.log(response);
+    res.status(200).json(response.data.users);
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error.message);
+    res.status(500).json({ success: false, message: "Error al obtener usuarios" });
+  }
+});
+
+
+
 // Iniciar el servidor
 app.listen(port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${port}`);

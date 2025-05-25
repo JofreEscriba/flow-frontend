@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react';
 import {Row,Col,Image,Form,Button} from 'react-bootstrap'
 import Card from '../../../components/Card'
 
@@ -11,7 +11,38 @@ import avatars4 from '../../../assets/images/avatars/avtar_3.png'
 import avatars5 from '../../../assets/images/avatars/avtar_4.png'
 import avatars6 from '../../../assets/images/avatars/avtar_5.png'
 
+
 const UserAdd =() =>{
+   const [name, setName] = useState('');
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+
+   const handleSignup = async () => {
+   if (!name || !email || !password) {
+      alert('Por favor completa name, email y password');
+      return;
+   }
+
+   try {
+      const response = await fetch('/api/signup', {
+         method: 'POST',
+         headers: {
+         'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+         throw new Error('Error al registrar el usuario');
+      }
+
+      const data = await response.json();
+      alert('Usuario registrado con éxito');
+      console.log(data);
+   } catch (error) {
+      alert(error.message);
+   }
+   };
   return(
       <>
         <div>
@@ -133,7 +164,13 @@ const UserAdd =() =>{
                                  </Form.Group>
                                  <Form.Group className="col-md-6  form-group">
                                     <Form.Label htmlFor="email">Email:</Form.Label>
-                                    <Form.Control type="email"  id="email" placeholder="Email"/>
+                                    <Form.Control
+                                       type="email"
+                                       id="email"
+                                       placeholder="Email"
+                                       value={email}
+                                       onChange={(e) => setEmail(e.target.value)}
+                                    />
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
                                     <Form.Label htmlFor="pno">Pin Code:</Form.Label>
@@ -147,13 +184,25 @@ const UserAdd =() =>{
                               <hr/>
                               <h5 className="mb-3">Security</h5>
                               <div className="row">
-                                 <Form.Group className="col-md-12 form-group">
+                                 <Form.Group className="col-md-6 form-group">
                                     <Form.Label htmlFor="uname">User Name:</Form.Label>
-                                    <Form.Control type="text"  id="uname" placeholder="User Name"/>
+                                    <Form.Control
+                                       type="text"
+                                       id="uname"
+                                       placeholder="User Name"
+                                       value={name}
+                                       onChange={(e) => setName(e.target.value)}
+                                    />
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
                                     <Form.Label htmlFor="pass">Password:</Form.Label>
-                                    <Form.Control type="password"  id="pass" placeholder="Password"/>
+                                    <Form.Control
+                                       type="password"
+                                       id="pass"
+                                       placeholder="Password"
+                                       value={password}
+                                       onChange={(e) => setPassword(e.target.value)}
+                                    />
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
                                     <Form.Label htmlFor="rpass">Repeat Password:</Form.Label>
@@ -163,7 +212,9 @@ const UserAdd =() =>{
                               <div className="checkbox">
                                  <label className="form-label"><input type="checkbox" className="me-2 form-check-input"  value="" id="flexCheckChecked"/>Enable Two-Factor-Authentication</label>
                               </div>
-                              <Button type="button" variant="btn btn-primary">Add New User</Button>
+                              <Button type="button" variant="btn btn-primary" onClick={handleSignup}>
+                              Add New User
+                              </Button>
                            </form>
                         </div>
                      </Card.Body>
