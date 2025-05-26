@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col, Image, Form, Button, ListGroup, } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import Card from '../../../components/Card'
+import { AuthProvider } from './hooks/useAuth'
 
 // img
 import facebook from '../../../assets/images/brands/fb.svg'
@@ -43,6 +44,7 @@ const SignIn = () => {
    };
    return (
       <>
+      <AuthProvider>
          <section className="login-content">
             <Row className="m-0 align-items-center bg-white vh-100">
                <Col md="6">
@@ -118,6 +120,7 @@ const SignIn = () => {
                </Col>
             </Row>
          </section>
+         </AuthProvider>
       </>
    )
 }

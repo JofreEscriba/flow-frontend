@@ -1,28 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
 import Card from '../../../components/Card'
 
 const Admin = () => {
-    const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
-
-    // Estados para modales
-    const [showRoleModal, setShowRoleModal] = useState(false)
-    const [showEditRoleModal, setShowEditRoleModal] = useState(false)
     const [showUserRoleModal, setShowUserRoleModal] = useState(false)
 
     // Estados para datos
     const [users, setUsers] = useState([])
     const [selectedUser, setSelectedUser] = useState(null)
     const [selectedRole, setSelectedRole] = useState('')
-    const [editingUser, setEditingUser] = useState(null)
-
-    // Estados para formularios
-    const [newRoleName, setNewRoleName] = useState('')
-    const [editRoleName, setEditRoleName] = useState('')
 
     // Roles predefinidos
     const availableRoles = ['admin', 'user', 'moderator']
@@ -51,7 +40,7 @@ const Admin = () => {
     // Cargar usuarios al montar el componente
     useEffect(() => {
         fetchUsers()
-    }, [])
+    })
 
     // Función para obtener usuarios
     const fetchUsers = async () => {
@@ -125,12 +114,6 @@ const Admin = () => {
         if (selectedUser && selectedRole) {
             updateUserRole(selectedUser.id, selectedRole)
         }
-    }
-
-    // Limpiar mensajes de error
-    const clearMessages = () => {
-        setError('')
-        setSuccess('')
     }
 
     return (

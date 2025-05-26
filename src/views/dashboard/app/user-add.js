@@ -46,13 +46,17 @@ const UserAdd =() =>{
                         <div className="new-user-info">
                            <form>
                               <div className="row">
-                                 <Form.Group className="col-md-6  form-group">
+                                 <Form.Group className="col-md-4 form-group">
+                                    <Form.Label htmlFor="uname">Nombre:</Form.Label>
+                                    <Form.Control type="text"  id="uname" placeholder="Nombre"/>
+                                 </Form.Group>
+                                 <Form.Group className="col-md-5  form-group">
                                     <Form.Label htmlFor="email">Email:</Form.Label>
                                     <Form.Control type="email"  id="email" placeholder="Email"/>
                                  </Form.Group>
-                                 <Form.Group className="col-md-6 form-group">
-                                    <Form.Label htmlFor="uname">Nombre:</Form.Label>
-                                    <Form.Control type="text"  id="uname" placeholder="Nombre"/>
+                                 <Form.Group className="col-md-3 form-group">
+                                    <Form.Label htmlFor="country">País:</Form.Label>
+                                    <Form.Control type="text"  id="country" placeholder="País"/>
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
                                     <Form.Label htmlFor="pass">Contraseña:</Form.Label>

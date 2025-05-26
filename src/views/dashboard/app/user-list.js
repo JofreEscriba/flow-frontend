@@ -85,7 +85,7 @@ const UserList = () => {
       });
     };
     fetchUsers();
-  }, []); // Assegura't que només s'executa un cop
+  }); // Assegura't que només s'executa un cop
 
     function handleDeleteUser(userId) {
     if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {

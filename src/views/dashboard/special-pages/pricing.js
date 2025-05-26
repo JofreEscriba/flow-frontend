@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Col, Row, Table, Card, Button, Form, Modal, Badge, InputGroup } from 'react-bootstrap'
 
 const Pricing = () => {
@@ -114,9 +113,9 @@ const Pricing = () => {
             completed: 'success'
         }
         const labels = {
-            pending: 'Pendent',
-            accepted: 'Acceptada',
-            rejected: 'Rebutjada',
+            pending: 'Pendiente',
+            accepted: 'Aceptada',
+            rejected: 'Denegada',
             active: 'Activa',
             completed: 'Completada'
         }
@@ -130,7 +129,7 @@ const Pricing = () => {
                     <div className="d-flex align-items-right">
                         <Button variant="primary" onClick={() => setShowModal(true)}>
                             <i className="fas fa-plus me-2"></i>
-                            Nova Proposta
+                            Nueva propuesta
                         </Button>
                     </div>
                 </Col>
@@ -147,19 +146,19 @@ const Pricing = () => {
                                         className="me-2"
                                         onClick={() => setActiveTab('proposals')}
                                     >
-                                        Propostes
+                                        Propuestas
                                     </Button>
                                     <Button 
                                         variant={activeTab === 'sales' ? 'primary' : 'outline-primary'}
                                         onClick={() => setActiveTab('sales')}
                                     >
-                                        Vendes
+                                        Ventas
                                     </Button>
                                 </div>
                                 <InputGroup style={{ width: '300px' }}>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Cerca per ID, client o servei..."
+                                        placeholder="Id, cliente, servicio..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
@@ -175,12 +174,12 @@ const Pricing = () => {
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Client</th>
-                                            <th>Servei</th>
-                                            <th>Import</th>
-                                            <th>Data</th>
-                                            <th>Estat</th>
-                                            <th>Accions</th>
+                                            <th>Cliente</th>
+                                            <th>Servicio</th>
+                                            <th>Importe</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -201,14 +200,14 @@ const Pricing = () => {
                                                                 className="me-2"
                                                                 onClick={() => handleProposalAction(proposal.id, 'accepted')}
                                                             >
-                                                                Acceptar
+                                                                Aceptar
                                                             </Button>
                                                             <Button 
                                                                 size="sm" 
                                                                 variant="danger"
                                                                 onClick={() => handleProposalAction(proposal.id, 'rejected')}
                                                             >
-                                                                Rebutjar
+                                                                Denegar
                                                             </Button>
                                                         </>
                                                     )}
@@ -260,29 +259,29 @@ const Pricing = () => {
                         <Row>
                             <Col md="6">
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Client</Form.Label>
+                                    <Form.Label>Cliente</Form.Label>
                                     <Form.Control
                                         type="text"
                                         value={newProposal.client}
                                         onChange={(e) => setNewProposal({...newProposal, client: e.target.value})}
-                                        placeholder="Nom del client"
+                                        placeholder="Nombre del cliente"
                                     />
                                 </Form.Group>
                             </Col>
                             <Col md="6">
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Servei</Form.Label>
+                                    <Form.Label>Tipo de servicio</Form.Label>
                                     <Form.Select
                                         value={newProposal.service}
                                         onChange={(e) => setNewProposal({...newProposal, service: e.target.value})}
                                     >
-                                        <option value="">Selecciona un servei</option>
-                                        <option value="API de Pagaments">API de Pagaments</option>
-                                        <option value="Microservei d'Autenticació">Microservei d'Autenticació</option>
-                                        <option value="API de Notificacions">API de Notificacions</option>
-                                        <option value="Servei de Geolocalització">Servei de Geolocalització</option>
-                                        <option value="API de Gestió d'Usuaris">API de Gestió d'Usuaris</option>
-                                        <option value="Microservei de Reporting">Microservei de Reporting</option>
+                                        <option value="">Selecciona un servicio</option>
+                                        <option value="API de Pagaments">API de pagos</option>
+                                        <option value="Microservei d'Autenticació">Microservicio de autenticación"</option>
+                                        <option value="API de Notificacions">API de notificaciones</option>
+                                        <option value="Servei de Geolocalització">Servicio de geolocalización</option>
+                                        <option value="API de Gestió d'Usuaris">API de gestión de usuarios</option>
+                                        <option value="Microservei de Reporting">Microservicio de reporting</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
@@ -290,7 +289,7 @@ const Pricing = () => {
                         <Row>
                             <Col md="6">
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Import (€)</Form.Label>
+                                    <Form.Label>Importe (€)</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={newProposal.amount}
@@ -301,27 +300,27 @@ const Pricing = () => {
                             </Col>
                         </Row>
                         <Form.Group className="mb-3">
-                            <Form.Label>Descripció</Form.Label>
+                            <Form.Label>Descripción</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows={3}
                                 value={newProposal.description}
                                 onChange={(e) => setNewProposal({...newProposal, description: e.target.value})}
-                                placeholder="Descripció detallada del microservei..."
+                                placeholder="Una descripción detallada del servicio que pides"
                             />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Cancel·lar
+                        Cancelar
                     </Button>
                     <Button 
                         variant="primary" 
                         onClick={handleCreateProposal}
                         disabled={!newProposal.client || !newProposal.service || !newProposal.amount}
                     >
-                        Crear Proposta
+                        Crear propuesta
                     </Button>
                 </Modal.Footer>
             </Modal>

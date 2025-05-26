@@ -76,7 +76,7 @@ const Billing = () => {
         options: {
             chart: { type: 'donut' },
             colors: [variableColors.primary, variableColors.info, variableColors.success, variableColors.warning],
-            labels: ['API Pagaments', 'Autenticació', 'Notificacions', 'Altres'],
+            labels: ['API pagos', 'Autenticación', 'Notificaciones', 'Otros'],
             legend: { position: 'bottom' },
             dataLabels: { enabled: true }
         },
@@ -111,12 +111,12 @@ const Billing = () => {
                     <div className="d-flex justify-content-between align-items-center">
                         <Dropdown>
                             <Dropdown.Toggle variant="primary">
-                                {period === 'month' ? 'Aquest Mes' : period === 'year' ? 'Aquest Any' : 'Aquesta Setmana'}
+                                {period === 'month' ? 'Este mes' : period === 'year' ? 'Este año' : 'Esta semana'}
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => setPeriod('week')}>Aquesta Setmana</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setPeriod('month')}>Aquest Mes</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setPeriod('year')}>Aquest Any</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setPeriod('week')}>Esta semana</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setPeriod('month')}>Este mes</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setPeriod('year')}>Este año</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
@@ -131,7 +131,7 @@ const Billing = () => {
                             <h3 className="text-primary">
                                 €<CountUp end={salesData.totalSales} duration={2} separator="," />
                             </h3>
-                            <p className="mb-0">Vendes Totals</p>
+                            <p className="mb-0">Ventas totales</p>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -141,7 +141,7 @@ const Billing = () => {
                             <h3 className="text-info">
                                 <CountUp end={salesData.totalProposals} duration={2} />
                             </h3>
-                            <p className="mb-0">Propostes Totals</p>
+                            <p className="mb-0">Propuestas totales</p>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -151,7 +151,7 @@ const Billing = () => {
                             <h3 className="text-success">
                                 <CountUp end={salesData.conversionRate} duration={2} decimals={1} />%
                             </h3>
-                            <p className="mb-0">Taxa de Conversió</p>
+                            <p className="mb-0">Tasa de conversión</p>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -161,7 +161,7 @@ const Billing = () => {
                             <h3 className="text-warning">
                                 €<CountUp end={salesData.averageValue} duration={2} separator="," />
                             </h3>
-                            <p className="mb-0">Valor Mitjà</p>
+                            <p className="mb-0">Valor mediano</p>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -172,7 +172,7 @@ const Billing = () => {
                 <Col md="8">
                     <Card>
                         <Card.Header>
-                            <h5>Evolució de Vendes i Propostes</h5>
+                            <h5>Evolución de ventas y propuestas</h5>
                         </Card.Header>
                         <Card.Body>
                             <Chart
@@ -187,7 +187,7 @@ const Billing = () => {
                 <Col md="4">
                     <Card className="mb-4">
                         <Card.Header>
-                            <h5>Distribució de Serveis</h5>
+                            <h5>Distribución de servicios</h5>
                         </Card.Header>
                         <Card.Body>
                             <Chart
@@ -205,7 +205,7 @@ const Billing = () => {
                 <Col md="6">
                     <Card>
                         <Card.Header>
-                            <h5>Estat de Propostes</h5>
+                            <h5>Estado de propuestas</h5>
                         </Card.Header>
                         <Card.Body>
                             <Chart
@@ -220,24 +220,24 @@ const Billing = () => {
                 <Col md="6">
                     <Card>
                         <Card.Header>
-                            <h5>Resum del Període</h5>
+                            <h5>Resumen del período</h5>
                         </Card.Header>
                         <Card.Body>
                             <div className="d-flex justify-content-between mb-3">
-                                <span>Propostes Acceptades:</span>
+                                <span>Propuestas aceptadas:</span>
                                 <strong className="text-success">{salesData.acceptedProposals}</strong>
                             </div>
                             <div className="d-flex justify-content-between mb-3">
-                                <span>Propostes Pendents:</span>
+                                <span>Propuestas pendientes:</span>
                                 <strong className="text-warning">{salesData.pendingProposals}</strong>
                             </div>
                             <div className="d-flex justify-content-between mb-3">
-                                <span>Propostes Rebutjades:</span>
+                                <span>Propuestas denegades:</span>
                                 <strong className="text-danger">{salesData.rejectedProposals}</strong>
                             </div>
                             <hr />
                             <div className="d-flex justify-content-between">
-                                <span><strong>Taxa d'Èxit:</strong></span>
+                                <span><strong>Tasa de éxito:</strong></span>
                                 <strong className="text-primary">{salesData.conversionRate}%</strong>
                             </div>
                         </Card.Body>

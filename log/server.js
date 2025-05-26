@@ -121,10 +121,10 @@ app.get("/profile", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, country } = req.body;
 
     try {
-        const response = await axios.post(`${baseUrl}register`, { name, email, password });
+        const response = await axios.post(`${baseUrl}register`, { name, email, password, country });
 
         if (response.status === 201) {
             res.status(201).json({

@@ -122,19 +122,6 @@ const VerticalNav = memo((props) => {
                     <Accordion.Collapse eventKey="sidebar-user">
                         <ul className="sub-nav">
                             <li className="nav-item">
-                                <Link className={`${location.pathname === '/dashboard/app/user-profile' ? 'active' : ''} nav-link`} to="/dashboard/app/user-profile">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> U </i>
-                                    <span className="item-name">User Profile</span>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
                                 <Link className={`${location.pathname === '/dashboard/app/user-add' ? 'active' : ''} nav-link`} to="/dashboard/app/user-add">
                                     <i className="icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
