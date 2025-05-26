@@ -22,10 +22,6 @@ import FormWizard from '../views/dashboard/from/form-wizard';
 import BootstrapTable from '../views/dashboard/table/bootstrap-table';
 import TableData from '../views/dashboard/table/table-data';
 
-// map
-import Vector from '../views/dashboard/maps/vector';
-import Google from '../views/dashboard/maps/google';
-
 //extra
 // import PrivacyPolicy from '../views/dashboard/extra/privacy-policy';
 // import TermsofService from '../views/dashboard/extra/terms-of-service';
@@ -106,15 +102,6 @@ export const DefaultRouter = [
             {
                 path: 'dashboard/widget/widgetcard',
                 element: <Widgetcard />
-            },
-            // Map
-            {
-                path: 'dashboard/map/google',
-                element: <Google />
-            },
-            {
-                path: 'dashboard/map/vector',
-                element: <Vector />
             },
             // Form
             {
