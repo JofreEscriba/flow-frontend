@@ -55,7 +55,7 @@ const fetchUsers = async () => {
         const data = await response.json()
 
         if (response.ok) {
-            setUsers(data.users) // ✅ todos los usuarios
+            setUsers(data.users)
             console.log('usuarios', data.users)
         } else {
             setError(data.message || 'Error al cargar usuarios')

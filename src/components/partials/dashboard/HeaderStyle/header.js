@@ -209,7 +209,7 @@ const Header = memo((props) => {
                                     </div>
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu  className="dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <Dropdown.Item href="/auth/lock-screen">Logout</Dropdown.Item>
+                                    <Dropdown.Item href="/">Logout</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Nav>

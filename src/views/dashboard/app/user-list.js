@@ -42,16 +42,33 @@ const UserList = () => {
     };
   };
 
+      // Obtener token del localStorage
+    const getToken = () => {
+        return localStorage.getItem('token')
+    }
+
+    // Headers para las peticiones
+    const getHeaders = () => {
+    const token = getToken()
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+    }
+}
+
+
   // Cargar usuarios desde la API
   useEffect(() => {
     const fetchUsers = async () => {
       let data = [];
       try {
         const response = await fetch('http://localhost:5000/users', {
-          headers: { 'Accept': 'application/json' }
-        });
+                method: 'GET',
+                headers: getHeaders(),
+            });
         if (response.ok) {
           data = await response.json();
+          data = data.users;
         }
       } catch (error) {
         // Si hi ha error, es continuarà amb data = []
@@ -85,13 +102,39 @@ const UserList = () => {
       });
     };
     fetchUsers();
-  }); // Assegura't que només s'executa un cop
+  },[]); // Assegura't que només s'executa un cop
 
     function handleDeleteUser(userId) {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      setUsers(users.filter(user => user.id !== userId));
-      // Aquí podrías hacer una llamada a la API para eliminar el usuario del servidor
-    }
+  if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+    // 1. Eliminar en la interfaz
+    setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+
+    // 2. Eliminar en el backend
+    const token = getToken();
+
+    fetch(`http://localhost:5000/users/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.success) {
+        console.error('Error al eliminar usuario:', data.message);
+        alert(data.message || 'No se pudo eliminar el usuario.');
+        // Opcional: revertir UI si falla
+        // setUsers(prevUsers => [...prevUsers, usuarioRestaurado]);
+      } else {
+        console.log('Usuario eliminado:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error al eliminar usuario:', error);
+      alert('Error de conexión al intentar eliminar usuario.');
+    });
+  }
   }
 
     function handleEditUser(userId) {
