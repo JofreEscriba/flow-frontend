@@ -73,7 +73,12 @@ app.post("/signup", async (req, res) => {
 // Customer Routes
 app.get("/customers", async (req, res) => {
     try {
-        const response = await axios.get(`${baseUrl}customers`);
+        const response = await axios.get(`${baseUrl}customers`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al obtener clientes:", error.message);
@@ -93,7 +98,12 @@ app.post("/customers", async (req, res) => {
 
 app.get("/customers/:id", async (req, res) => {
     try {
-        const response = await axios.get(`${baseUrl}customers/${req.params.id}`);
+        const response = await axios.get(`${baseUrl}customers/${req.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al obtener cliente:", error.message);
@@ -113,7 +123,12 @@ app.put("/customers/:id", async (req, res) => {
 
 app.delete("/customers/:id", async (req, res) => {
     try {
-        const response = await axios.delete(`${baseUrl}customers/${req.params.id}`);
+        const response = await axios.delete(`${baseUrl}customers/${req.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al eliminar cliente:", error.message);
@@ -124,7 +139,12 @@ app.delete("/customers/:id", async (req, res) => {
 // Sales Routes
 app.get("/sales", async (req, res) => {
     try {
-        const response = await axios.get(`${baseUrl}sales`);
+        const response = await axios.get(`${baseUrl}sales`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al obtener ventas:", error.message);
@@ -144,7 +164,12 @@ app.post("/sales", async (req, res) => {
 
 app.get("/sales/:id", async (req, res) => {
     try {
-        const response = await axios.get(`${baseUrl}sales/${req.params.id}`);
+        const response = await axios.get(`${baseUrl}sales/${req.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al obtener venta:", error.message);
@@ -164,7 +189,12 @@ app.put("/sales/:id", async (req, res) => {
 
 app.delete("/sales/:id", async (req, res) => {
     try {
-        const response = await axios.delete(`${baseUrl}sales/${req.params.id}`);
+        const response = await axios.delete(`${baseUrl}sales/${req.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al eliminar venta:", error.message);
@@ -175,7 +205,12 @@ app.delete("/sales/:id", async (req, res) => {
 // Services Routes
 app.get("/services", async (req, res) => {
     try {
-        const response = await axios.get(`${baseUrl}services`);
+        const response = await axios.get(`${baseUrl}services`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al obtener servicios:", error.message);
@@ -195,7 +230,12 @@ app.post("/services", async (req, res) => {
 
 app.get("/services/:id", async (req, res) => {
     try {
-        const response = await axios.get(`${baseUrl}services/${req.params.id}`);
+        const response = await axios.get(`${baseUrl}services/${req.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al obtener servicio:", error.message);
@@ -215,7 +255,12 @@ app.put("/services/:id", async (req, res) => {
 
 app.delete("/services/:id", async (req, res) => {
     try {
-        const response = await axios.delete(`${baseUrl}services/${req.params.id}`);
+        const response = await axios.delete(`${baseUrl}services/${req.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
+        'Accept': 'application/json'
+      }
+    });
         res.status(200).json(response.data);
     } catch (error) {
         console.error("Error al eliminar servicio:", error.message);
@@ -232,7 +277,6 @@ app.get("/users", async (req, res) => {
         'Accept': 'application/json'
       }
     });
-    console.log(response);
     res.status(200).json(response.data.users);
   } catch (error) {
     console.error("Error al obtener usuarios:", error.message);
