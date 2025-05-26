@@ -2,7 +2,6 @@ import React from 'react'
 import Index from '../views/dashboard/index'
 // import { Switch, Route } from 'react-router-dom'
 // user
-import UserProfile from '../views/dashboard/app/user-profile';
 import UserAdd from '../views/dashboard/app/user-add';
 import UserList from '../views/dashboard/app/user-list';
 // import userProfileEdit from '../views/dashboard/app/user-privacy-setting';
@@ -77,10 +76,6 @@ export const DefaultRouter = [
             {
                 path: 'dashboard/special-pages/rtl-support',
                 element: <RtlSupport/>,
-            },
-            {
-                path: 'dashboard/app/user-profile',
-                element: <UserProfile />
             },
             {
                 path: 'dashboard/app/user-add',

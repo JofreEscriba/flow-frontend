@@ -13,12 +13,11 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-
+// Auth Routes
 app.post("/signin", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Realizar la solicitud al backend externo
         const response = await axios.post(`${baseUrl}login`, { email, password });
 
         if (response.status === 200) {
@@ -26,6 +25,7 @@ app.post("/signin", async (req, res) => {
                 success: true,
                 message: "Inicio de sesión exitoso",
                 user: response.data.user,
+                token: response.data.token // Incluir el token en la respuesta
             });
         } else {
             res.status(response.status).json({
@@ -34,20 +34,97 @@ app.post("/signin", async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Error en Sign In:", error.message);
-        res.status(500).json({
+        console.error("Error en Sign In:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
             success: false,
-            message: "Error interno del servidor",
+            message: error.response?.data?.message || "Error interno del servidor",
+        });
+    }
+});
+
+app.post("/logout", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.post(`${baseUrl}logout`, {}, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/json'    
+            }
+        });
+        
+        if (response.status === 200) {
+            res.status(200).json({
+                success: true,
+                message: "Cierre de sesión exitoso",
+            });
+        } else {
+            res.status(response.status).json({
+                success: false,
+                message: response.data.message || "Error en el cierre de sesión",
+            });
+        }
+    } catch (error) {
+        console.error("Error en Logout:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            success: false,
+            message: error.response?.data?.message || "Error interno del servidor",
+        });
+    }
+});
+
+// Verificar perfil de usuario (reemplaza el endpoint de token)
+app.get("/profile", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.get(`${baseUrl}profile`, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            res.status(200).json({
+                success: true,
+                message: "Perfil obtenido exitosamente",
+                user: response.data.user,
+            });
+        } else {
+            res.status(response.status).json({
+                success: false,
+                message: response.data.message || "Error al obtener el perfil",
+            });
+        }
+    } catch (error) {
+        console.error("Error en Profile:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            success: false,
+            message: error.response?.data?.message || "Error interno del servidor",
         });
     }
 });
 
 app.post("/signup", async (req, res) => {
-    const { name,email, password } = req.body;
+    const { name, email, password } = req.body;
 
     try {
-        // Realizar la solicitud al backend externo
-        const response = await axios.post(`${baseUrl}register`, {name,email, password });
+        const response = await axios.post(`${baseUrl}register`, { name, email, password });
 
         if (response.status === 201) {
             res.status(201).json({
@@ -62,229 +139,475 @@ app.post("/signup", async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Error en Sign Up:", error.message);
-        res.status(500).json({
+        console.error("Error en Sign Up:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
             success: false,
-            message: "Error interno del servidor",
+            message: error.response?.data?.message || "Error interno del servidor",
         });
     }
 });
 
+// User Management Routes
+app.get("/users", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.get(`${baseUrl}users`, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/json'
+            }
+        });
+        res.status(200).json({
+            success: true,
+            users: response.data.users
+        });
+    } catch (error) {
+        console.error("Error al obtener usuarios:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ 
+            success: false, 
+            message: "Error al obtener usuarios" 
+        });
+    }
+});
+
+app.patch("/users/:id/role", async (req, res) => {
+    const { role } = req.body;
+    const { id } = req.params;
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.patch(`${baseUrl}users/${id}/role`, { role }, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            res.status(200).json({
+                success: true,
+                message: "Rol actualizado exitosamente",
+                user: response.data.user,
+            });
+        } else {
+            res.status(response.status).json({
+                success: false,
+                message: response.data.message || "Error al actualizar el rol",
+            });
+        }
+    } catch (error) {
+        console.error("Error al actualizar rol:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            success: false,
+            message: error.response?.data?.message || "Error interno del servidor",
+        });
+    }
+});
+
+app.put("/users/:id", async (req, res) => {
+    const { id } = req.params;
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.put(`${baseUrl}users/${id}`, req.body, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        res.status(200).json({
+            success: true,
+            message: "Usuario actualizado exitosamente",
+            user: response.data.user
+        });
+    } catch (error) {
+        console.error("Error al actualizar usuario:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ 
+            success: false, 
+            message: "Error al actualizar usuario" 
+        });
+    }
+});
+
+app.delete("/users/:id", async (req, res) => {
+    const { id } = req.params;
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.delete(`${baseUrl}users/${id}`, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/json'
+            }
+        });
+        res.status(200).json({
+            success: true,
+            message: "Usuario eliminado exitosamente"
+        });
+    } catch (error) {
+        console.error("Error al eliminar usuario:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ 
+            success: false, 
+            message: "Error al eliminar usuario" 
+        });
+    }
+});
+
+// Helper function to add auth headers
+const addAuthHeaders = (authHeader) => ({
+    'Authorization': authHeader,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+});
+
 // Customer Routes
 app.get("/customers", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.get(`${baseUrl}customers`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener clientes:", error.message);
-        res.status(500).json({ success: false, message: "Error al obtener clientes" });
+        console.error("Error al obtener clientes:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener clientes" });
     }
 });
 
 app.post("/customers", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
-        const response = await axios.post(`${baseUrl}customers`, req.body);
+        const response = await axios.post(`${baseUrl}customers`, req.body, {
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(201).json(response.data);
     } catch (error) {
-        console.error("Error al crear cliente:", error.message);
-        res.status(500).json({ success: false, message: "Error al crear cliente" });
+        console.error("Error al crear cliente:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al crear cliente" });
     }
 });
 
 app.get("/customers/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.get(`${baseUrl}customers/${req.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener cliente:", error.message);
-        res.status(500).json({ success: false, message: "Error al obtener cliente" });
+        console.error("Error al obtener cliente:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener cliente" });
     }
 });
 
 app.put("/customers/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
-        const response = await axios.put(`${baseUrl}customers/${req.params.id}`, req.body);
+        const response = await axios.put(`${baseUrl}customers/${req.params.id}`, req.body, {
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al actualizar cliente:", error.message);
-        res.status(500).json({ success: false, message: "Error al actualizar cliente" });
+        console.error("Error al actualizar cliente:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al actualizar cliente" });
     }
 });
 
 app.delete("/customers/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.delete(`${baseUrl}customers/${req.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al eliminar cliente:", error.message);
-        res.status(500).json({ success: false, message: "Error al eliminar cliente" });
+        console.error("Error al eliminar cliente:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al eliminar cliente" });
     }
 });
 
 // Sales Routes
 app.get("/sales", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.get(`${baseUrl}sales`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener ventas:", error.message);
-        res.status(500).json({ success: false, message: "Error al obtener ventas" });
+        console.error("Error al obtener ventas:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener ventas" });
     }
 });
 
 app.post("/sales", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
-        const response = await axios.post(`${baseUrl}sales`, req.body);
+        const response = await axios.post(`${baseUrl}sales`, req.body, {
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(201).json(response.data);
     } catch (error) {
-        console.error("Error al crear venta:", error.message);
-        res.status(500).json({ success: false, message: "Error al crear venta" });
+        console.error("Error al crear venta:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al crear venta" });
     }
 });
 
 app.get("/sales/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.get(`${baseUrl}sales/${req.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener venta:", error.message);
-        res.status(500).json({ success: false, message: "Error al obtener venta" });
+        console.error("Error al obtener venta:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener venta" });
     }
 });
 
 app.put("/sales/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
-        const response = await axios.put(`${baseUrl}sales/${req.params.id}`, req.body);
+        const response = await axios.put(`${baseUrl}sales/${req.params.id}`, req.body, {
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al actualizar venta:", error.message);
-        res.status(500).json({ success: false, message: "Error al actualizar venta" });
+        console.error("Error al actualizar venta:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al actualizar venta" });
     }
 });
 
 app.delete("/sales/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.delete(`${baseUrl}sales/${req.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al eliminar venta:", error.message);
-        res.status(500).json({ success: false, message: "Error al eliminar venta" });
+        console.error("Error al eliminar venta:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al eliminar venta" });
     }
 });
 
 // Services Routes
 app.get("/services", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.get(`${baseUrl}services`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener servicios:", error.message);
-        res.status(500).json({ success: false, message: "Error al obtener servicios" });
+        console.error("Error al obtener servicios:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener servicios" });
     }
 });
 
 app.post("/services", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
-        const response = await axios.post(`${baseUrl}services`, req.body);
+        const response = await axios.post(`${baseUrl}services`, req.body, {
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(201).json(response.data);
     } catch (error) {
-        console.error("Error al crear servicio:", error.message);
-        res.status(500).json({ success: false, message: "Error al crear servicio" });
+        console.error("Error al crear servicio:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al crear servicio" });
     }
 });
 
 app.get("/services/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.get(`${baseUrl}services/${req.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener servicio:", error.message);
-        res.status(500).json({ success: false, message: "Error al obtener servicio" });
+        console.error("Error al obtener servicio:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener servicio" });
     }
 });
 
 app.put("/services/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
-        const response = await axios.put(`${baseUrl}services/${req.params.id}`, req.body);
+        const response = await axios.put(`${baseUrl}services/${req.params.id}`, req.body, {
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al actualizar servicio:", error.message);
-        res.status(500).json({ success: false, message: "Error al actualizar servicio" });
+        console.error("Error al actualizar servicio:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al actualizar servicio" });
     }
 });
 
 app.delete("/services/:id", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
     try {
         const response = await axios.delete(`${baseUrl}services/${req.params.id}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
+            headers: addAuthHeaders(authHeader)
+        });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al eliminar servicio:", error.message);
-        res.status(500).json({ success: false, message: "Error al eliminar servicio" });
+        console.error("Error al eliminar servicio:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al eliminar servicio" });
     }
 });
-
-app.get("/users", async (req, res) => {
-  try {
-    console.log(baseUrl);
-    const response = await axios.get(`${baseUrl}users`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.API_TOKEN_CRUD}`,
-        'Accept': 'application/json'
-      }
-    });
-    res.status(200).json(response.data.users);
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error.message);
-    res.status(500).json({ success: false, message: "Error al obtener usuarios" });
-  }
-});
-
-
 
 // Iniciar el servidor
 app.listen(port, () => {

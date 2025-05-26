@@ -14,7 +14,7 @@ const UserAdd =() =>{
                   <Card>
                      <Card.Header className="d-flex justify-content-between">
                         <div className="header-title">
-                           <h4 className="card-title">Add New User</h4>
+                           <h4 className="card-title">Añadir usuarios</h4>
                         </div>
                      </Card.Header>
                      <Card.Body>
@@ -25,10 +25,10 @@ const UserAdd =() =>{
                               </div>
                            </Form.Group>
                            <Form.Group className="form-group">
-                              <Form.Label>User Role:</Form.Label>
+                              <Form.Label>Rol del usuario:</Form.Label>
                               <select name="type" className="selectpicker form-control" data-style="py-0">
-                                 <option>Select</option>
-                                 <option>Web Designer</option>
+                                 <option>Seleccionar</option>
+                                 <option>1</option>
                               </select>
                            </Form.Group>
                         </Form>
@@ -39,7 +39,7 @@ const UserAdd =() =>{
                   <Card>
                      <Card.Header className="d-flex justify-content-between">
                         <div className="header-title">
-                           <h4 className="card-title">New User Information</h4>
+                           <h4 className="card-title">Información del nuevo usuario</h4>
                         </div>
                      </Card.Header>
                      <Card.Body>
@@ -51,23 +51,19 @@ const UserAdd =() =>{
                                     <Form.Control type="email"  id="email" placeholder="Email"/>
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
-                                    <Form.Label htmlFor="uname">User Name:</Form.Label>
-                                    <Form.Control type="text"  id="uname" placeholder="User Name"/>
+                                    <Form.Label htmlFor="uname">Nombre:</Form.Label>
+                                    <Form.Control type="text"  id="uname" placeholder="Nombre"/>
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
-                                    <Form.Label htmlFor="pass">Password:</Form.Label>
-                                    <Form.Control type="password"  id="pass" placeholder="Password"/>
+                                    <Form.Label htmlFor="pass">Contraseña:</Form.Label>
+                                    <Form.Control type="password"  id="pass" placeholder="Contraseña"/>
                                  </Form.Group>
                                  <Form.Group className="col-md-6 form-group">
-                                    <Form.Label htmlFor="rpass">Repeat Password:</Form.Label>
-                                    <Form.Control type="password"  id="rpass" placeholder="Repeat Password "/>
+                                    <Form.Label htmlFor="rpass">Repetir contraseña:</Form.Label>
+                                    <Form.Control type="password"  id="rpass" placeholder="Repetir contraseña"/>
                                  </Form.Group>
-                                
                               </div>
-                              <div className="checkbox">
-                                 <label className="form-label"><input type="checkbox" className="me-2 form-check-input"  value="" id="flexCheckChecked"/>Enable Two-Factor-Authentication</label>
-                              </div>
-                              <Button type="button" variant="btn btn-primary">Add New User</Button>
+                              <Button type="button" variant="btn btn-primary">Añadir usuario</Button>
                            </form>
                         </div>
                      </Card.Body>

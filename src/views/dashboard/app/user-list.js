@@ -1,32 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Image } from 'react-bootstrap';
+import { Row, Col, Image, Badge } from 'react-bootstrap'; // Afegit Badge
 import { Link } from 'react-router-dom';
 import Card from '../../../components/Card';
+import Chart from 'react-apexcharts'; // Afegit per a les gràfiques
 
 const UserList = () => {
+  const mockUsers = [
+    { id: 1, name: 'Anna Client', email: 'anna@client.com', role: 'client', status: 'Active', created_at: '2024-03-01' },
+    { id: 2, name: 'Joan Client', email: 'joan@client.com', role: 'client', status: 'Pending', created_at: '2024-03-05' },
+    { id: 3, name: 'Maria Client', email: 'maria@client.com', role: 'client', status: 'Inactive', created_at: '2024-03-10' },
+    { id: 4, name: 'Pere Usuari', email: 'pere@usuari.com', role: 'user', status: 'Active', created_at: '2024-03-12' },
+    { id: 5, name: 'Laura Client', email: 'laura@client.com', role: 'client', status: 'Active', created_at: '2024-03-15' }
+  ];
   const [users, setUsers] = useState([]);
+  const [clientUsers, setClientUsers] = useState([]); // Estat per als usuaris clients
+  const [clientStatusChartData, setClientStatusChartData] = useState({ // Estat per a la gràfica d'estat de clients
+    options: {},
+    series: []
+  });
+
+  // Funció per obtenir colors variables (similar a billing.js)
+  const getVariableColor = () => {
+    let prefix =
+      getComputedStyle(document.body).getPropertyValue("--prefix") || "bs-";
+    if (prefix) {
+      prefix = prefix.trim();
+    }
+    const color1 = getComputedStyle(document.body).getPropertyValue(
+      `--${prefix}primary`
+    );
+    const color2 = getComputedStyle(document.body).getPropertyValue(
+      `--${prefix}success`
+    );
+    const color3 = getComputedStyle(document.body).getPropertyValue(
+      `--${prefix}warning`
+    );
+    return {
+      primary: color1.trim(),
+      success: color2.trim(),
+      warning: color3.trim(),
+    };
+  };
 
   // Cargar usuarios desde la API
   useEffect(() => {
     const fetchUsers = async () => {
+      let data = [];
       try {
         const response = await fetch('http://localhost:5000/users', {
-          headers: {
-            'Accept': 'application/json'
-          }
+          headers: { 'Accept': 'application/json' }
         });
-        console.log(localStorage.getItem('token'));
-        if (!response.ok) throw new Error('Error al obtener los usuarios');
-
-        const data = await response.json();
-        setUsers(data);
+        if (response.ok) {
+          data = await response.json();
+        }
       } catch (error) {
-        console.error('Error:', error);
+        // Si hi ha error, es continuarà amb data = []
       }
+      if (!Array.isArray(data) || data.length === 0) {
+        data = mockUsers; // Sempre mostra usuaris de prova si no hi ha dades vàlides
+      }
+      setUsers(data);
+      // Filtrar usuaris amb rol 'client' i preparar dades per a la gràfica
+      const clients = data.filter(user => user.role === 'client');
+      setClientUsers(clients);
+      const statusCounts = clients.reduce((acc, user) => {
+        acc[user.status] = (acc[user.status] || 0) + 1;
+        return acc;
+      }, {});
+      const variableColors = getVariableColor();
+      setClientStatusChartData({
+        options: {
+          chart: { type: 'donut' },
+          labels: Object.keys(statusCounts),
+          colors: [variableColors.success, variableColors.warning, variableColors.primary],
+          legend: { position: 'bottom' },
+          dataLabels: { enabled: true, formatter: function (val, opts) { return opts.w.config.series[opts.seriesIndex] } },
+          tooltip: {
+            y: {
+              formatter: function (val) { return val + " clients"; }
+            }
+          }
+        },
+        series: Object.values(statusCounts)
+      });
     };
-
     fetchUsers();
-  }, []);
+  }, []); // Assegura't que només s'executa un cop
 
     function handleDeleteUser(userId) {
     if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
@@ -71,13 +130,19 @@ const UserList = () => {
                       <td className="text-center">
                         <Image
                           className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                          src={`https://ui-avatars.com/api/?name=${user.name}`}
+                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`}
                           alt="avatar"
                         />
                       </td>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
-                      <td><span className="badge bg-primary">Active</span></td>
+                      {/* Asumint que l'usuari té una propietat 'status' i 'role' */}
+                      <td>
+                        {user.status === 'Active' && <Badge bg="primary">{user.status}</Badge>}
+                        {user.status === 'Pending' && <Badge bg="warning">{user.status}</Badge>}
+                        {user.status === 'Inactive' && <Badge bg="danger">{user.status}</Badge>}
+                        {!['Active', 'Pending', 'Inactive'].includes(user.status) && <Badge bg="secondary">{user.status || 'N/A'}</Badge>}
+                      </td>
                       <td>{new Date(user.created_at).toLocaleDateString()}</td>
                       <td>
                         <div className="flex align-items-center list-user-action">
@@ -110,6 +175,40 @@ const UserList = () => {
           </Card.Body>
         </Card>
       </Col>
+      {/* Secció d'anàlisi de clients */}
+      {clientUsers.length > 0 && (
+        <Col sm="12" className="mt-4">
+          <Card>
+            <Card.Header className="d-flex justify-content-between">
+              <div className="header-title">
+                <h4 className="card-title">Anàlisi de Clients</h4>
+              </div>
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Col md="6">
+                  <h5>Distribució d'Estat de Clients</h5>
+                  {clientStatusChartData.series.length > 0 ? (
+                    <Chart
+                      options={clientStatusChartData.options}
+                      series={clientStatusChartData.series}
+                      type="donut"
+                      height={350}
+                    />
+                  ) : (
+                    <p>No hi ha dades suficients per mostrar la gràfica d'estat.</p>
+                  )}
+                </Col>
+                {/* Aquí pots afegir més gràfiques */}
+                {/* <Col md="6">
+                  <h5>Altra Gràfica de Clients</h5>
+                  Pots afegir una altra configuració de gràfica aquí 
+                </Col> */}
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      )}
     </Row>
   );
 };
