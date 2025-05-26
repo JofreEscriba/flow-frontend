@@ -31,6 +31,7 @@ const SignIn = () => {
             const data = await response.json();
             console.log('Inicio de sesión exitoso:', data);
             alert('Inicio de sesión exitoso.');
+            localStorage.setItem('token', data.token);
             navigate('/dashboard');
          } else {
             const errorData = await response.json();

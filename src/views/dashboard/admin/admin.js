@@ -30,43 +30,44 @@ const Admin = () => {
 
     // Headers para las peticiones
     const getHeaders = () => {
-        const token = getToken()
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': token ? `Bearer ${token}` : ''
-        }
+    const token = getToken()
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
     }
+}
 
-    // Cargar usuarios al montar el componente
-    useEffect(() => {
-        fetchUsers()
-    })
+// Cargar usuarios al montar el componente
+useEffect(() => {
+    fetchUsers()
+}, [])
 
-    // Función para obtener usuarios
-    const fetchUsers = async () => {
-        setLoading(true)
-        setError('')
-        
-        try {
-            const response = await fetch('http://localhost:5000/users', {
-                method: 'GET',
-                headers: getHeaders()
-            })
+const fetchUsers = async () => {
+    setLoading(true)
+    setError('')
 
-            const data = await response.json()
+    try {
+        const response = await fetch('http://localhost:5000/users', {
+            method: 'GET',
+            headers: getHeaders()
+        })
 
-            if (response.ok) {
-                setUsers(data || [])
-            } else {
-                setError('Error al cargar usuarios')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-            setError('Error de conexión')
-        } finally {
-            setLoading(false)
+        const data = await response.json()
+
+        if (response.ok) {
+            setUsers(data.users) // ✅ todos los usuarios
+            console.log('usuarios', data.users)
+        } else {
+            setError(data.message || 'Error al cargar usuarios')
         }
+    } catch (error) {
+        console.error('Error:', error)
+        setError('Error de conexión')
+    } finally {
+        setLoading(false)
     }
+}
+
 
     // Función para actualizar rol de usuario
     const updateUserRole = async (userId, newRole) => {

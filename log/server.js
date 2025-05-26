@@ -150,6 +150,7 @@ app.post("/signup", async (req, res) => {
 // User Management Routes
 app.get("/users", async (req, res) => {
     const authHeader = req.headers.authorization;
+    console.log("Authorization Header:", authHeader);
     
     if (!authHeader) {
         return res.status(401).json({
@@ -165,6 +166,7 @@ app.get("/users", async (req, res) => {
                 'Accept': 'application/json'
             }
         });
+        
         res.status(200).json({
             success: true,
             users: response.data.users
