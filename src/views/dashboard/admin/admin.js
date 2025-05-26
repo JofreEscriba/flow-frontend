@@ -144,41 +144,10 @@ const Admin = () => {
                     <Card>
                         <Card.Header className="d-flex justify-content-between flex-wrap">
                             <div className="header-title">
-                                <h4 className="card-title mb-0">Role & Permission</h4>
+                                <h4 className="card-title mb-0">Roles y permisos</h4>
 
                             </div>
                             <div>
-                                <Button className="text-center btn-primary btn-icon me-2 mt-lg-0 mt-md-0 mt-3" onClick={handleShow}>
-                                    <i className="btn-inner">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                    </i>
-                                    <span>New Permission</span>
-                                </Button>
-                                <Modal show={show} onHide={handleClose}>
-                                    <Modal.Header closeButton>
-                                        <Modal.Title>Add new permission</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                                            <Form.Label>permission title</Form.Label>
-                                            <Form.Control type="text" onChange={e => setName(e.target.value)} placeholder="Permission Title" />
-                                        </Form.Group>
-                                        <Button variant="primary" onClick={
-                                            () => {
-                                                permissionpush()
-                                                handleClose()
-                                            }
-                                        }
-                                        >
-                                            Save
-                                        </Button>{' '}
-                                        <Button variant="danger" onClick={handleClose}>
-                                            Cancel
-                                        </Button>
-                                    </Modal.Body>
-                                </Modal>
                                 <Button className="text-center btn-primary btn-icon mt-lg-0 mt-md-0 mt-3" onClick={handleShow1}>
                                     <i className="btn-inner">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -362,7 +331,6 @@ const Admin = () => {
                             </div>
                         </Card.Body>
                     </Card>
-
                 </Col>
             </Row>
         </>
