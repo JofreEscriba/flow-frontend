@@ -221,7 +221,7 @@ const ServicesPage = () => {
                                                 <td>{service.customer ? `${service.customer.name} (ID: ${service.customer.customer_id})` : 'N/A'}</td>
                                                 <td>{service.sale_id}</td>
                                                 <td>{service.price} €</td>
-                                                <td>{service.status}</td>
+                                                <td>{service.state}</td>
                                                 <td>{new Date(service.start_date).toLocaleDateString()}</td>
                                                 <td>{service.end_date ? new Date(service.end_date).toLocaleDateString() : '-'}</td>
                                                 <td>
@@ -274,7 +274,7 @@ const ServicesPage = () => {
 
                         <Form.Group className="mb-3" controlId="formStatus">
                             <Form.Label>Estat (*)</Form.Label>
-                            <Form.Select name="status" defaultValue={currentService?.status || 'pending'} required>
+                            <Form.Select name="state" defaultValue={currentService?.state ?? 'pending'} required>
                                 <option value="pending">Pendent</option>
                                 <option value="in_progress">En Progrés</option>
                                 <option value="completed">Completat</option>

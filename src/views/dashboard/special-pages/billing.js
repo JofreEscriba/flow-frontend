@@ -90,7 +90,7 @@ const Billing = () => {
                             counts.pending++;
                             break;
                         case 'rejected':
-                        case 'rechazada':
+                        case 'rebutjada':
                             counts.rejected++;
                             break;
                         default:
@@ -98,8 +98,8 @@ const Billing = () => {
                     }
 
                     // Ventas mensuales: supongamos sale.date es un ISO string
-                    if (sale.date) {
-                        const date = new Date(sale.date);
+                    if (sale.creationDate) {
+                        const date = new Date(sale.creationDate);
                         const month = date.getMonth(); // 0 - Enero, 11 - Diciembre
                         salesPerMonth[month] += sale.price || 0;
                     }
