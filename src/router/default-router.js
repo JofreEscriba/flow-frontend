@@ -38,6 +38,8 @@ import Pricing from '../views/dashboard/special-pages/pricing';
 import Timeline from '../views/dashboard/special-pages/timeline';
 import Calender from '../views/dashboard/special-pages/calender';
 import RtlSupport from '../views/dashboard/special-pages/RtlSupport'
+import ServicesPage from '../views/dashboard/special-pages/services'; // Afegim la nova importació
+
 
 //admin
 import Admin from '../views/dashboard/admin/admin';
@@ -84,6 +86,10 @@ export const DefaultRouter = [
             {
                 path: 'dashboard/app/user-list',
                 element: <UserList />
+            },
+            {
+                path: 'dashboard/special-pages/services',
+                element: <ServicesPage />
             },
             {
                 path: 'dashboard/admin/admin',

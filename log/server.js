@@ -415,6 +415,7 @@ app.get("/sales", async (req, res) => {
             headers: addAuthHeaders(authHeader)
         });
         res.status(200).json(response.data);
+        console.log("Ventas obtenidas exitosamente:", response.data);
     } catch (error) {
         console.error("Error al obtener ventas:", error.response?.data || error.message);
         res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener ventas" });
@@ -548,7 +549,7 @@ app.post("/services", async (req, res) => {
     }
 });
 
-app.get("/services/:id", async (req, res) => {
+app.get("/services/customer/:customerId", async (req, res) => {
     const authHeader = req.headers.authorization;
     
     if (!authHeader) {
@@ -559,13 +560,34 @@ app.get("/services/:id", async (req, res) => {
     }
 
     try {
-        const response = await axios.get(`${baseUrl}services/${req.params.id}`, {
+        const response = await axios.get(`${baseUrl}services/customer/${req.params.customerId}`, {
             headers: addAuthHeaders(authHeader)
         });
         res.status(200).json(response.data);
     } catch (error) {
-        console.error("Error al obtener servicio:", error.response?.data || error.message);
-        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener servicio" });
+        console.error("Error al obtener servicios por cliente:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener servicios por cliente" });
+    }
+});
+
+app.get("/services/sale/:saleId", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: "Token de autorización requerido"
+        });
+    }
+
+    try {
+        const response = await axios.get(`${baseUrl}services/sale/${req.params.sale_id}`, {
+            headers: addAuthHeaders(authHeader)
+        });
+        res.status(200).json(response.data);
+    } catch (error) {
+        console.error("Error al obtener servicios por venta:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ success: false, message: "Error al obtener servicios por venta" });
     }
 });
 
