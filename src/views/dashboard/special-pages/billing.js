@@ -1,22 +1,25 @@
-
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Col, Card, Dropdown } from 'react-bootstrap'
 import Chart from 'react-apexcharts'
 import CountUp from 'react-countup'
+import axios from "axios";
 
 const Billing = () => {
     const [period, setPeriod] = useState('month')
-    
-    // Dades simulades per les estadístiques
-    const salesData = {
-        totalSales: 45600,
-        totalProposals: 28,
-        acceptedProposals: 18,
-        rejectedProposals: 4,
-        pendingProposals: 6,
-        conversionRate: 64.3,
-        averageValue: 2533
-    }
+    const [sales, setSales] = useState([]);
+    const [proposalStates, setProposalStates] = useState({
+        accepted: 0,
+        pending: 0,
+        rejected: 0,
+    });
+    const [totalAcceptedSales, setTotalAcceptedSales] = useState(0);
+    const [totalProposals, setTotalProposals] = useState(0);
+    const [conversionRate, setConversionRate] = useState(0);
+    const [averageValue, setAverageValue] = useState(0);
+
+    // Puedes adaptar si tienes datos para distribución servicios, ventas mensuales, etc.
+    const [servicesDistribution, setServicesDistribution] = useState([35, 25, 20, 20]);
+    const [monthlySalesData, setMonthlySalesData] = useState(new Array(12).fill(0)); // 12 meses
 
     const getVariableColor = () => {
         let prefix = getComputedStyle(document.body).getPropertyValue('--prefix') || 'bs-'
@@ -37,7 +40,102 @@ const Billing = () => {
     
     const variableColors = getVariableColor()
 
-    // Gràfica de vendes mensuals
+    const getToken = () => localStorage.getItem('token')
+    const getAuthToken = () => {
+        const token = getToken()
+        return token ? `Bearer ${token}` : '';
+    };
+
+    const loadSales = async () => {
+        try {
+            const token = getAuthToken();
+            if (!token) return [];
+
+            const response = await axios.get("http://localhost:5000/sales", {
+                headers: { Authorization: token }
+            });
+
+            return response.data || [];
+        } catch (err) {
+            console.error("Error en cargar las ventas:", err);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        const fetchSales = async () => {
+            const data = await loadSales();
+
+            if (Array.isArray(data) && data.length > 0) {
+                // --- Total propuestas ---
+                setTotalProposals(data.length);
+
+                // --- Contar estados y sumar ventas aceptadas ---
+                const counts = { accepted: 0, pending: 0, rejected: 0 };
+                let acceptedSum = 0;
+
+                // Para cálculo mensual de ventas (suponiendo que tienes un campo date)
+                const salesPerMonth = new Array(12).fill(0);
+
+                data.forEach(sale => {
+                    // Contar estados
+                    switch ((sale.state || '').toLowerCase()) {
+                        case 'accepted':
+                        case 'acceptada':
+                            counts.accepted++;
+                            acceptedSum += sale.price || 0;
+                            break;
+                        case 'pending':
+                        case 'pendent':
+                            counts.pending++;
+                            break;
+                        case 'rejected':
+                        case 'rechazada':
+                            counts.rejected++;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // Ventas mensuales: supongamos sale.date es un ISO string
+                    if (sale.date) {
+                        const date = new Date(sale.date);
+                        const month = date.getMonth(); // 0 - Enero, 11 - Diciembre
+                        salesPerMonth[month] += sale.price || 0;
+                    }
+                });
+
+                setProposalStates(counts);
+                setTotalAcceptedSales(acceptedSum);
+
+                // --- Tasa de conversión: aceptadas / total propuestas * 100 ---
+                const conversion = (counts.accepted / data.length) * 100;
+                setConversionRate(conversion);
+
+                // --- Valor promedio de ventas aceptadas ---
+                const average = counts.accepted > 0 ? acceptedSum / counts.accepted : 0;
+                setAverageValue(average);
+
+                // --- Ventas mensuales para gráfico ---
+                setMonthlySalesData(salesPerMonth);
+
+                // --- Aquí podrías cargar distribución de servicios si tienes esos datos ---
+                // setServicesDistribution(...)
+
+            } else {
+                // No hay datos
+                setTotalProposals(0);
+                setProposalStates({ accepted: 0, pending: 0, rejected: 0 });
+                setTotalAcceptedSales(0);
+                setConversionRate(0);
+                setAverageValue(0);
+                setMonthlySalesData(new Array(12).fill(0));
+            }
+        };
+
+        fetchSales();
+    }, []);
+
     const salesChart = {
         options: {
             chart: {
@@ -49,7 +147,7 @@ const Billing = () => {
             dataLabels: { enabled: false },
             stroke: { curve: 'smooth', width: 3 },
             xaxis: {
-                categories: ['Gen', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'],
+                categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 labels: { style: { colors: '#8A92A6' } }
             },
             yaxis: {
@@ -61,17 +159,12 @@ const Billing = () => {
         },
         series: [
             {
-                name: 'Vendes (€)',
-                data: [3200, 4100, 3800, 5200, 4600, 5800, 6200, 5400, 4900, 5600, 6800, 7200]
+                name: 'Ventas (€)',
+                data: monthlySalesData
             },
-            {
-                name: 'Propostes',
-                data: [5, 7, 6, 9, 8, 10, 11, 9, 8, 10, 12, 13]
-            }
         ]
     }
 
-    // Gràfica de distribució de serveis
     const servicesChart = {
         options: {
             chart: { type: 'donut' },
@@ -80,10 +173,9 @@ const Billing = () => {
             legend: { position: 'bottom' },
             dataLabels: { enabled: true }
         },
-        series: [35, 25, 20, 20]
+        series: servicesDistribution
     }
 
-    // Gràfica de conversió de propostes
     const conversionChart = {
         options: {
             chart: { type: 'bar', toolbar: { show: false } },
@@ -93,14 +185,14 @@ const Billing = () => {
             },
             dataLabels: { enabled: false },
             xaxis: {
-                categories: ['Acceptades', 'Pendents', 'Rebutjades'],
+                categories: ['Aceptadas', 'Pendientes', 'Rechazadas'],
                 labels: { style: { colors: '#8A92A6' } }
             },
             yaxis: { labels: { style: { colors: '#8A92A6' } } }
         },
         series: [{
-            name: 'Propostes',
-            data: [salesData.acceptedProposals, salesData.pendingProposals, salesData.rejectedProposals]
+            name: 'Propuestas',
+            data: [proposalStates.accepted, proposalStates.pending, proposalStates.rejected]
         }]
     }
 
@@ -129,9 +221,9 @@ const Billing = () => {
                     <Card className="text-center">
                         <Card.Body>
                             <h3 className="text-primary">
-                                €<CountUp end={salesData.totalSales} duration={2} separator="," />
+                                €<CountUp end={totalAcceptedSales} duration={2} separator="," decimals={2} />
                             </h3>
-                            <p className="mb-0">Ventas totales</p>
+                            <p className="mb-0">Ventas totales (aceptadas)</p>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -139,9 +231,9 @@ const Billing = () => {
                     <Card className="text-center">
                         <Card.Body>
                             <h3 className="text-info">
-                                <CountUp end={salesData.totalProposals} duration={2} />
+                                <CountUp end={totalProposals} duration={2} />
                             </h3>
-                            <p className="mb-0">Propuestas totales</p>
+                            <p className="mb-0">Número de ventas</p>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -149,7 +241,7 @@ const Billing = () => {
                     <Card className="text-center">
                         <Card.Body>
                             <h3 className="text-success">
-                                <CountUp end={salesData.conversionRate} duration={2} decimals={1} />%
+                                <CountUp end={conversionRate} duration={2} decimals={1} />%
                             </h3>
                             <p className="mb-0">Tasa de conversión</p>
                         </Card.Body>
@@ -159,15 +251,15 @@ const Billing = () => {
                     <Card className="text-center">
                         <Card.Body>
                             <h3 className="text-warning">
-                                €<CountUp end={salesData.averageValue} duration={2} separator="," />
+                                €<CountUp end={averageValue} duration={2} separator="," decimals={2} />
                             </h3>
-                            <p className="mb-0">Valor mediano</p>
+                            <p className="mb-0">Valor promedio</p>
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
 
-            {/* Gràfiques */}
+            {/* Gráficas */}
             <Row>
                 <Col md="8">
                     <Card>
@@ -205,7 +297,7 @@ const Billing = () => {
                 <Col md="6">
                     <Card>
                         <Card.Header>
-                            <h5>Estado de propuestas</h5>
+                            <h5>Estado de ventas</h5>
                         </Card.Header>
                         <Card.Body>
                             <Chart
@@ -225,20 +317,20 @@ const Billing = () => {
                         <Card.Body>
                             <div className="d-flex justify-content-between mb-3">
                                 <span>Propuestas aceptadas:</span>
-                                <strong className="text-success">{salesData.acceptedProposals}</strong>
+                                <strong className="text-success">{proposalStates.accepted}</strong>
                             </div>
                             <div className="d-flex justify-content-between mb-3">
                                 <span>Propuestas pendientes:</span>
-                                <strong className="text-warning">{salesData.pendingProposals}</strong>
+                                <strong className="text-warning">{proposalStates.pending}</strong>
                             </div>
                             <div className="d-flex justify-content-between mb-3">
-                                <span>Propuestas denegades:</span>
-                                <strong className="text-danger">{salesData.rejectedProposals}</strong>
+                                <span>Propuestas denegadas:</span>
+                                <strong className="text-danger">{proposalStates.rejected}</strong>
                             </div>
                             <hr />
                             <div className="d-flex justify-content-between">
                                 <span><strong>Tasa de éxito:</strong></span>
-                                <strong className="text-primary">{salesData.conversionRate}%</strong>
+                                <strong className="text-primary">{conversionRate.toFixed(1)}%</strong>
                             </div>
                         </Card.Body>
                     </Card>

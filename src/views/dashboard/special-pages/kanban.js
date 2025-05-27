@@ -29,8 +29,8 @@ const ServicesManagement = () => {
     description: "",
 
     status: "pending",
-    start_date: new Date(),
-    end_date: null
+    created_at: new Date(),
+    updated_at: null
   });
 
   // Obtenir el token d'autenticació
@@ -110,6 +110,7 @@ const ServicesManagement = () => {
 
   // Gestionar canvis al formulari
   const handleInputChange = (e) => {
+    console.log("Canvi de formulari:", e.target.name, e.target.value); // DEBUG
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -135,8 +136,8 @@ const ServicesManagement = () => {
       description: "",
 
       status: "pending",
-      start_date: new Date(),
-      end_date: null
+      created_at: new Date(),
+      updated_at: null
     });
     setShowModal(true);
   };
@@ -151,8 +152,8 @@ const ServicesManagement = () => {
       description: service.description,
 
       status: service.status,
-      start_date: new Date(service.start_date),
-      end_date: service.end_date ? new Date(service.end_date) : null
+      created_at: new Date(service.created_at),
+      updated_at: service.updated_at ? new Date(service.updated_at) : null
     });
     setShowModal(true);
   };
@@ -167,8 +168,15 @@ const ServicesManagement = () => {
       }
 
       // Validar formulari
-      if (!formData.customer_id || !formData.sale_id || !formData.name || !formData.description || !formData.status || !formData.start_date) {
+      if (!formData.customer_id || !formData.sale_id || !formData.name || !formData.description || !formData.status || !formData.created_at) {
         setError("Tots els camps obligatoris han de ser completats");
+        console.log("customer_id:", formData.customer_id);
+        console.log("sale_id:", formData.sale_id);
+        console.log("name:", formData.name);
+        console.log("description:", formData.description);
+        console.log("status:", formData.status);
+        console.log("created_at:", formData.created_at);
+        console.log("updated_at:", formData.updated_at);
         return;
       }
 
@@ -180,7 +188,7 @@ const ServicesManagement = () => {
 
       if (editingService) {
         // Actualitzar servei existent
-        await axios.put(`http://localhost:5000/services/${editingService.id}`, serviceData, {
+        await axios.put(`http://localhost:5000/services/${editingService.service_id}`, serviceData, {
           headers: { Authorization: token }
         });
       } else {
@@ -200,7 +208,7 @@ const ServicesManagement = () => {
   };
 
   // Eliminar servei
-  const handleDeleteService = async (serviceId) => {
+  const handleDeleteService = async (service_id) => {
     if (window.confirm("Estàs segur que vols eliminar aquest servei?")) {
       try {
         const token = getAuthToken();
@@ -209,7 +217,8 @@ const ServicesManagement = () => {
           return;
         }
 
-        await axios.delete(`http://localhost:5000/services/${serviceId}`, {
+        console.log("Eliminant servei amb ID:", service_id); // DEBUG
+        await axios.delete(`http://localhost:5000/services/${service_id}`, {
           headers: { Authorization: token }
         });
 
@@ -234,7 +243,7 @@ const ServicesManagement = () => {
     
     // Filtre per data d'inici
     if (startDateFilter) {
-      const serviceStartDate = new Date(service.start_date);
+      const serviceStartDate = new Date(service.created_at);
       const filterDate = new Date(startDateFilter);
       filterDate.setHours(0, 0, 0, 0);
       if (serviceStartDate < filterDate) {
@@ -244,7 +253,7 @@ const ServicesManagement = () => {
     
     // Filtre per data final
     if (endDateFilter) {
-      const serviceStartDate = new Date(service.start_date);
+      const serviceStartDate = new Date(service.created_at);
       const filterDate = new Date(endDateFilter);
       filterDate.setHours(23, 59, 59, 999);
       if (serviceStartDate > filterDate) {
@@ -334,10 +343,11 @@ const ServicesManagement = () => {
                   <Form.Group>
                     <Form.Label>Estat</Form.Label>
                     <Form.Select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
+                      name="status"
+                      value={formData.status}
+                      onChange={handleInputChange}
+                      required
                     >
-                      <option value="">Tots els estats</option>
                       <option value="pending">Pendent</option>
                       <option value="in_progress">En progrés</option>
                       <option value="completed">Completat</option>
@@ -395,11 +405,11 @@ const ServicesManagement = () => {
                               {getStatusText(service.status)}
                             </Badge>
                           </td>
-                          <td>{formatDate(service.start_date)}</td>
-                          <td>{formatDate(service.end_date)}</td>
+                          <td>{formatDate(service.created_at)}</td>
+                          <td>{formatDate(service.updated_at)}</td>
                           <td>
                             <Dropdown>
-                              <Dropdown.Toggle variant="light" size="sm" id={`dropdown-${service.id}`}>
+                              <Dropdown.Toggle variant="light" size="sm" id={`dropdown-${service.service_id}`}>
                                 Accions
                               </Dropdown.Toggle>
                               <Dropdown.Menu>
@@ -407,13 +417,13 @@ const ServicesManagement = () => {
                                   Editar
                                 </Dropdown.Item>
                                 <Dropdown.Item 
-                                  onClick={() => handleDeleteService(service.id)}
+                                  onClick={() => handleDeleteService(service.service_id)}
                                   className="text-danger"
                                 >
                                   Eliminar
                                 </Dropdown.Item>
                                 <Dropdown.Divider />
-                                <Dropdown.Item as={Link} to={`/dashboard/calendar?serviceId=${service.id}`}>
+                                <Dropdown.Item as={Link} to={`/dashboard/calendar?service_id=${service.service_id}`}>
                                   Veure al calendari
                                 </Dropdown.Item>
                               </Dropdown.Menu>
@@ -503,7 +513,7 @@ const ServicesManagement = () => {
               <Col md="4">
                 <Form.Group className="mb-3">
                   <Form.Label>Estat *</Form.Label>
-                  <Form.Select
+                   <Form.Select
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
@@ -514,6 +524,7 @@ const ServicesManagement = () => {
                     <option value="completed">Completat</option>
                     <option value="cancelled">Cancel·lat</option>
                   </Form.Select>
+
                 </Form.Group>
               </Col>
             </Row>
@@ -523,8 +534,8 @@ const ServicesManagement = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Data d'inici *</Form.Label>
                   <DatePicker
-                    selected={formData.start_date}
-                    onChange={(date) => handleDateChange(date, 'start_date')}
+                    selected={formData.created_at}
+                    onChange={(date) => handleDateChange(date, 'created_at')}
                     className="form-control"
                     dateFormat="dd/MM/yyyy"
                     required
@@ -535,12 +546,12 @@ const ServicesManagement = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Data final</Form.Label>
                   <DatePicker
-                    selected={formData.end_date}
-                    onChange={(date) => handleDateChange(date, 'end_date')}
+                    selected={formData.updated_at}
+                    onChange={(date) => handleDateChange(date, 'updated_at')}
                     className="form-control"
                     dateFormat="dd/MM/yyyy"
                     isClearable
-                    minDate={formData.start_date}
+                    minDate={formData.created_at}
                   />
                 </Form.Group>
               </Col>
@@ -560,4 +571,4 @@ const ServicesManagement = () => {
   );
 };
 
-export default ServicesManagement;
+export default ServicesManagement;  

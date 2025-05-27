@@ -475,6 +475,7 @@ app.put("/sales/:id", async (req, res) => {
     }
 
     try {
+        console.log("Actualizando venta con ID:", req.params.id, "y datos:", req.body); // DEBUG
         const response = await axios.put(`${baseUrl}sales/${req.params.id}`, req.body, {
             headers: addAuthHeaders(authHeader)
         });
@@ -612,7 +613,7 @@ app.put("/services/:id", async (req, res) => {
     }
 });
 
-app.delete("/services/:id", async (req, res) => {
+app.delete("/services/:service_id", async (req, res) => {
     const authHeader = req.headers.authorization;
     
     if (!authHeader) {
@@ -623,7 +624,9 @@ app.delete("/services/:id", async (req, res) => {
     }
 
     try {
-        const response = await axios.delete(`${baseUrl}services/${req.params.id}`, {
+        console.log("Eliminando sale con ID:", req.params); // DEBUG
+
+        const response = await axios.delete(`${baseUrl}services/${req.params.service_id}`, {
             headers: addAuthHeaders(authHeader)
         });
         res.status(200).json(response.data);
