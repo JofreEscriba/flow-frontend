@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { usestatus, useEffect, useCallback } from 'react';
 import { Row, Col, Card, Button, Modal, Form, Table, Alert, Spinner, InputGroup } from 'react-bootstrap';
 // import HeaderBread from '../../../components/partials/components/header-breadcrumb'; // Descomentar si es necessari
 
 const ServicesPage = () => {
-    const [services, setServices] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [currentService, setCurrentService] = useState(null); // Per editar
-    const [isEditMode, setIsEditMode] = useState(false);
+    const [services, setServices] = usestatus([]);
+    const [isLoading, setIsLoading] = usestatus(false);
+    const [error, setError] = usestatus(null);
+    const [showModal, setShowModal] = usestatus(false);
+    const [currentService, setCurrentService] = usestatus(null); // Per editar
+    const [isEditMode, setIsEditMode] = usestatus(false);
 
-    const [filterStartDate, setFilterStartDate] = useState('');
+    const [filterStartDate, setFilterStartDate] = usestatus('');
 
     // Funció per obtenir el token (exemple, ajustar segons l'aplicació)
     const getToken = () => localStorage.getItem('token');
@@ -215,13 +215,13 @@ const ServicesPage = () => {
                                     </thead>
                                     <tbody>
                                         {filteredServices.map(service => (
-                                            <tr key={service.id}>
+                                                <tr key={service.id}>
                                                 <td>{service.id}</td>
                                                 <td>{service.service_name}</td>
                                                 <td>{service.customer ? `${service.customer.name} (ID: ${service.customer.customer_id})` : 'N/A'}</td>
                                                 <td>{service.sale_id}</td>
                                                 <td>{service.price} €</td>
-                                                <td>{service.state}</td>
+                                                <td>{service.status}</td>
                                                 <td>{new Date(service.start_date).toLocaleDateString()}</td>
                                                 <td>{service.end_date ? new Date(service.end_date).toLocaleDateString() : '-'}</td>
                                                 <td>
@@ -274,7 +274,7 @@ const ServicesPage = () => {
 
                         <Form.Group className="mb-3" controlId="formStatus">
                             <Form.Label>Estat (*)</Form.Label>
-                            <Form.Select name="state" defaultValue={currentService?.state ?? 'pending'} required>
+                            <Form.Select name="status" defaultValue={currentService?.status ?? 'pending'} required>
                                 <option value="pending">Pendent</option>
                                 <option value="in_progress">En Progrés</option>
                                 <option value="completed">Completat</option>

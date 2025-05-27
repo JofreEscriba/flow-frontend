@@ -168,6 +168,7 @@ const ServicesManagement = () => {
       }
 
       // Validar formulari
+      console.log(formData); // DEBUG
       if (!formData.customer_id || !formData.sale_id || !formData.name || !formData.description || !formData.status || !formData.created_at) {
         setError("Tots els camps obligatoris han de ser completats");
         console.log("customer_id:", formData.customer_id);
